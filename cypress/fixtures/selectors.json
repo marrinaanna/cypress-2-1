@@ -1,0 +1,8 @@
+{
+    "mail": "[type=email]",
+    "password": "[type=password]",
+    "buttonLogin": "[value=Авторизоваться]",
+    "openSale": "#start-sales",
+    "movieSeanceTime": ".movie-seances__time",
+    "buying__info_hall": ".buying__info-hall"
+}

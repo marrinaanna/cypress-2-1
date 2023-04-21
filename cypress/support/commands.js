@@ -1,31 +1,60 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import selectors from '../fixtures/selectors.json';
+
 Cypress.Commands.add("login", (login, password) => {
   cy.contains("Авторизация");
-  cy.get('[for="email"] > .login__input').type(login);
-  cy.get('[for="pwd"] > .login__input').type(password);
-  cy.get('.login__button').click();
+  cy.get(selectors.mail).type(login);
+  cy.get(selectors.password).type(password);
+  cy.get(selectors.buttonLogin).click();
+});
+
+Cypress.Commands.add("createUser",(id, username, firstName, lastName, email, password, phone, userStatus) => {
+    cy.request({
+      method: "POST",
+      url: "https://petstore.swagger.io/v2/user",
+      body: {
+        id: id,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        phone: phone,
+        userStatus: userStatus,
+      },
+    });
+  }
+);
+
+Cypress.Commands.add(
+  "updateUser",(id, username, firstName, lastName, email, password, phone, userStatus) => {
+    cy.request({
+      method: "PUT",
+      url: "https://petstore.swagger.io/v2/user/marinaanna",
+      body: {
+        id: id,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        phone: phone,
+        userStatus: userStatus,
+      },
+    });
+  }
+);
+
+Cypress.Commands.add("check_userStatus",() => {
+    cy.request({
+      method: "GET",
+      url: "https://petstore.swagger.io/v2/user/marinaanna"
+   });
+  }
+);
+
+Cypress.Commands.add("deleteUser", (username) => {
+  cy.request({
+    method: "DELETE",
+    url: "https://petstore.swagger.io/v2/user/marinaanna",
+  });
 });

@@ -1,21 +1,42 @@
-it('API test', ()=> {
+import '../support/commands.js'
+const {
+  id,
+  username,
+  firstName,
+  lastName,
+  email,
+  password,
+  phone,
+  userStatus,
+} = require("../fixtures/user.json");
 
-cy.request({
-    method: "POST",
-    url: "https://petstore.swagger.io/v2/pet",
-    body: {
-      id: 1,
-      category: {id: 0, name: "string"},
-      name: "bobik",
-      photoUrls: ["string"],
-      tags: [{
-          id: 0,
-          name: "string",
-        }],
-      status: "available",
-    }
-  }).then((response) => {
-    cy.log(JSON.stringify(response.body));
-    expect(response.status).to.eq(200);
-}) 
-})
+describe("Api tests", () => {
+  it("Should create a new user", () => {
+    cy.createUser(id, username, firstName, lastName, email, password, phone, userStatus).then(
+      (response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body.message).to.eql("170420231056");
+      }
+    );
+    cy.deleteUser(username);
+  });
+
+  it("Should update user", () => {
+    cy.createUser(id, username, firstName, lastName, email, password, phone, userStatus);
+    cy.updateUser(id, username, firstName, lastName, email, password, phone, "8").then(
+      (response) => {
+        expect(response.status).to.eq(200);
+      }
+    );
+    cy.check_userStatus().then((response) => {expect(response.body.password).to.eql(password)});
+    cy.deleteUser(username);
+  });
+
+  it("Should delete user", () => {
+    cy.createUser(id, username, firstName, lastName, email, password, phone, userStatus);
+    cy.deleteUser(username).then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body.message).to.eql("marinaanna");
+    });
+  });
+});
